@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0e1a24">
+    <meta name="description" content="Steve's private, offline workout generator for Kongs, home, hotel and bodyweight training.">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Steve's Workout">
+    <title>Steve's Workout Planner</title>
+    <link rel="manifest" href="./manifest.webmanifest">
+    <link rel="icon" href="./icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="./icon-192.png">
+    <link rel="stylesheet" href="./styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="#top" aria-label="Steve's Workout Planner home">
+        <span class="brand-mark" aria-hidden="true"><i></i></span>
+        <span>
+          <small>Steve's</small>
+          <strong>Workout Planner</strong>
+        </span>
+      </a>
+      <span class="offline-badge" id="connection-status"><i></i> Ready offline</span>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <p class="eyebrow">The workout serves the day</p>
+        <h1>What are we training?</h1>
+        <p>Choose the session, place and how you feel. The planner handles the rest.</p>
+      </section>
+
+      <form id="planner-form" novalidate>
+        <section class="setup-card" aria-labelledby="session-heading">
+          <div class="section-title">
+            <span>01</span>
+            <div>
+              <h2 id="session-heading">Session</h2>
+              <p>Train what you want today.</p>
+            </div>
+          </div>
+          <div id="session-types" class="choice-grid session-grid" role="radiogroup" aria-label="Workout type"></div>
+        </section>
+
+        <section class="setup-card" aria-labelledby="location-heading">
+          <div class="section-title">
+            <span>02</span>
+            <div>
+              <h2 id="location-heading">Location</h2>
+              <p>Only movements using equipment that is there.</p>
+            </div>
+          </div>
+          <div id="locations" class="choice-grid location-grid" role="radiogroup" aria-label="Training location"></div>
+
+          <fieldset id="hotel-equipment" class="equipment-panel" hidden>
+            <legend>What does the hotel gym have?</legend>
+            <div class="equipment-grid">
+              <label><input type="checkbox" name="hotel-equipment" value="dumbbells"><span>Dumbbells</span></label>
+              <label><input type="checkbox" name="hotel-equipment" value="bench"><span>Bench</span></label>
+              <label><input type="checkbox" name="hotel-equipment" value="cable"><span>Cable</span></label>
+              <label><input type="checkbox" name="hotel-equipment" value="machines"><span>Machines</span></label>
+              <label><input type="checkbox" name="hotel-equipment" value="pullup"><span>Pull-up bar</span></label>
+              <label><input type="checkbox" name="hotel-equipment" value="bands"><span>Bands</span></label>
+              <label><input type="checkbox" name="hotel-equipment" value="kettlebells"><span>Kettlebells</span></label>
+            </div>
+            <p>If none are selected, the workout automatically uses bodyweight.</p>
+          </fieldset>
+        </section>
+
+        <section class="setup-card" aria-labelledby="duration-heading">
+          <div class="section-title">
+            <span>03</span>
+            <div>
+              <h2 id="duration-heading">Time</h2>
+              <p>Four to seven exercises, sized to the clock.</p>
+            </div>
+          </div>
+          <div id="durations" class="choice-grid duration-grid" role="radiogroup" aria-label="Workout duration">
+            <button type="button" data-duration="20" role="radio" aria-checked="false"><strong>20</strong><small>min</small></button>
+            <button type="button" data-duration="30" role="radio" aria-checked="false"><strong>30</strong><small>min</small></button>
+            <button type="button" data-duration="40" role="radio" aria-checked="true" class="is-selected"><strong>40</strong><small>min</small></button>
+            <button type="button" data-duration="50" role="radio" aria-checked="false"><strong>50</strong><small>min</small></button>
+            <button type="button" data-duration="60" role="radio" aria-checked="false"><strong>60</strong><small>min</small></button>
+          </div>
+        </section>
+
+        <section class="setup-card" aria-labelledby="readiness-heading">
+          <div class="section-title">
+            <span>04</span>
+            <div>
+              <h2 id="readiness-heading">Readiness</h2>
+              <p>Enough context to choose useful, joint-friendly work.</p>
+            </div>
+          </div>
+
+          <div class="readiness-control">
+            <label for="energy">
+              <span>Energy</span>
+              <strong id="energy-output">7 <small>/ 10 · Good</small></strong>
+            </label>
+            <input id="energy" type="range" min="1" max="10" step="1" value="7">
+            <div class="scale-labels"><span>Running low</span><span>Ready to work</span></div>
+          </div>
+
+          <div class="readiness-control pain-control">
+            <label for="pain-level">
+              <span>Pain / soreness</span>
+              <strong id="pain-output">0 <small>/ 10 · None</small></strong>
+            </label>
+            <input id="pain-level" type="range" min="0" max="10" step="1" value="0">
+            <div class="scale-labels"><span>None</span><span>High</span></div>
+          </div>
+
+          <fieldset id="pain-panel" class="pain-panel" hidden>
+            <legend>Where do you feel it?</legend>
+            <p>Select every relevant area.</p>
+            <div id="pain-areas" class="pain-grid"></div>
+          </fieldset>
+
+          <label class="toggle-row" for="hard-activity">
+            <span>
+              <strong>Hard activity in the last 48 hours</strong>
+              <small>Running, padel, sport or another demanding session</small>
+            </span>
+            <input id="hard-activity" type="checkbox">
+            <i aria-hidden="true"></i>
+          </label>
+
+          <label class="notes-field" for="notes">
+            <span>Anything else? <small>Optional — not saved</small></span>
+            <textarea id="notes" maxlength="180" rows="2" placeholder="e.g. overhead work felt awkward yesterday"></textarea>
+          </label>
+        </section>
+
+        <button class="generate-button" type="submit">
+          <span>Build today's workout</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+
+      <section id="workout-output" class="workout-output" hidden aria-labelledby="workout-title">
+        <div class="result-hero">
+          <div>
+            <p class="eyebrow" id="workout-context">Today's session</p>
+            <h2 id="workout-title">Upper</h2>
+            <p id="workout-subtitle"></p>
+          </div>
+          <span class="mode-badge" id="mode-badge">Normal</span>
+        </div>
+
+        <div class="warmup-card">
+          <span>Warm-up</span>
+          <strong id="warmup-text"></strong>
+        </div>
+
+        <div id="exercise-list" class="exercise-list"></div>
+        <div id="workout-notes" class="workout-notes"></div>
+
+        <div class="result-actions">
+          <button type="button" id="copy-workout" class="primary-action">Copy workout</button>
+          <button type="button" id="regenerate-workout">Another option</button>
+          <button type="button" id="edit-setup">Change setup</button>
+        </div>
+        <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+      </section>
+
+      <details class="principles-card">
+        <summary>
+          <span><small>The rules</small><strong>How workouts are built</strong></span>
+          <i aria-hidden="true"></i>
+        </summary>
+        <div>
+          <p>Most strength movements use two quality working sets. Exercise choice follows your requested session, location, energy and pain—not a rigid weekly split.</p>
+          <ul>
+            <li>Four to seven familiar, useful exercises</li>
+            <li>Stable and joint-friendly choices when readiness is lower</li>
+            <li>Home sessions use your kettlebells, rings, bands, parallettes, pull-up bar and mace</li>
+            <li>Kongs sessions prioritise the preferred machine, cable and dumbbell library</li>
+          </ul>
+          <a href="./workout-rules.html">Read the complete planner rules</a>
+        </div>
+      </details>
+    </main>
+
+    <footer>
+      <span>Private by design</span>
+      <span>No login · no workout tracking · works offline</span>
+    </footer>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
